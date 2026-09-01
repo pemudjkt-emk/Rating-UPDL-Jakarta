@@ -86,7 +86,7 @@ def tampilkan_form():
         
         st.markdown("""
             <div class='header-mockup'>
-                <h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
+                <h1>PLEASE RATE US</h1>
             </div>
         """, unsafe_allow_html=True)
         
