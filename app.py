@@ -6,23 +6,29 @@ import time
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
-# INJEKSI CSS KUSTOM
+# INJEKSI CSS KUSTOM (Versi Padat untuk Layar Laptop)
 st.markdown("""
     <style>
+    /* 1. Memotong ruang kosong bawaan Streamlit di bagian paling atas */
+    .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 1rem !important;
+    }
+    
     /* Background utama */
     .stApp {
         background-color: #f6f8f9;
     }
     
-    /* 1. Membesarkan ukuran Bintang 3x Lipat */
+    /* Membesarkan ukuran Bintang 3x Lipat */
     div[data-testid="stFeedback"] {
-        transform: scale(3.0); /* Diperbesar 3x */
+        transform: scale(3.0); 
         transform-origin: left center;
     }
 
-    /* 2. Styling Teks Pertanyaan (Diperbesar) */
+    /* Styling Teks Pertanyaan */
     .tanya-teks {
-        font-size: 50px; /* Font jauh lebih besar */
+        font-size: 38px; /* Disesuaikan agar muat 1 baris di laptop */
         font-weight: 900;
         color: #128c8c; 
         margin-bottom: 0px;
@@ -31,34 +37,33 @@ st.markdown("""
         font-family: 'Arial Black', Impact, sans-serif;
     }
 
-    /* Styling Tombol Submit */
+    /* Styling Tombol Submit - Dibuat lebih padat */
     div[data-testid="stButton"] button {
         background-color: #15a5a5 !important; 
         color: white !important;
         font-weight: 900 !important;
         border-radius: 40px !important;
-        padding: 30px 40px !important;
+        padding: 15px 30px !important; /* Tinggi tombol diperkecil */
         border: none !important;
         box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-        margin-top: 30px;
+        margin-top: 15px !important; /* Jarak atas tombol dinaikkan */
     }
     div[data-testid="stButton"] button p {
-        font-size: 38px !important; 
+        font-size: 32px !important; 
     }
 
-    /* Header Mockup */
+    /* Header Mockup - Dibuat lebih tipis */
     .header-mockup {
         background-color: #15a5a5;
-        padding: 25px;
+        padding: 15px; /* Padding dikurangi */
         text-align: center;
         border-radius: 10px;
-        margin-bottom: 60px;
-        margin-top: -30px;
+        margin-bottom: 30px; /* Jarak bawah header dikurangi */
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .header-mockup h1 {
         color: white;
-        font-size: 50px;
+        font-size: 42px; /* Ukuran teks header disesuaikan */
         font-weight: 900;
         margin: 0;
         line-height: 1.1;
@@ -77,16 +82,12 @@ def tampilkan_form():
             </div>
         """, unsafe_allow_html=True)
         
-        # PERBAIKAN: Layout diubah menjadi "Baris per Baris"
-        # vertical_alignment="center" memastikan bintang dan teks sejajar di tengah
-        
         # --- BARIS PERTANYAAN 1 ---
         col1_kiri, col1_kanan = st.columns([3, 2], gap="large", vertical_alignment="center")
         with col1_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN KAMI?</p>", unsafe_allow_html=True)
         with col1_kanan:
             pelayanan = st.feedback("stars", key="bintang_pelayanan")
-        st.write("<br><br>", unsafe_allow_html=True) # Jarak ke baris berikutnya
         
         # --- BARIS PERTANYAAN 2 ---
         col2_kiri, col2_kanan = st.columns([3, 2], gap="large", vertical_alignment="center")
@@ -94,7 +95,6 @@ def tampilkan_form():
             st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN KAMI?</p>", unsafe_allow_html=True)
         with col2_kanan:
             kebersihan = st.feedback("stars", key="bintang_kebersihan")
-        st.write("<br><br>", unsafe_allow_html=True)
         
         # --- BARIS PERTANYAAN 3 ---
         col3_kiri, col3_kanan = st.columns([3, 2], gap="large", vertical_alignment="center")
@@ -102,7 +102,6 @@ def tampilkan_form():
             st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN ADMIN/FO KAMI?</p>", unsafe_allow_html=True)
         with col3_kanan:
             keramahan = st.feedback("stars", key="bintang_keramahan")
-        st.write("<br><br>", unsafe_allow_html=True)
             
         st.write("---")
         
