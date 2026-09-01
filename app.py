@@ -4,7 +4,7 @@ from streamlit_gsheets import GSheetsConnection
 import time
 
 # Pengaturan Tampilan Layar (Wide Mode)
-st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
+st.set_page_config(page_title="Please Rate Us", page_icon="⚡", layout="wide")
 
 # INJEKSI CSS KUSTOM (Update Font & Jarak)
 st.markdown("""
