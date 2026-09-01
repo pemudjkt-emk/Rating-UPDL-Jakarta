@@ -5,17 +5,13 @@ import time
 
 # 1. Pengaturan Tampilan Layar
 st.set_page_config(page_title="Rating UPDL Jakarta", layout="centered")
-
-# Membuat "kanvas" kosong agar kita bisa mengganti/menghapus tampilan layar
 layar_utama = st.empty()
 
-# Fungsi untuk menampilkan halaman form penilaian
 def tampilkan_form():
     with layar_utama.container():
         st.markdown("<h1 style='text-align: center;'>Rating Ruang Kelas UPDL</h1>", unsafe_allow_html=True)
         st.write("---")
         
-        # Input bintang murni (tanpa teks angka)
         st.markdown("### Pelayanan")
         pelayanan = st.feedback("stars", key="bintang_pelayanan")
         
@@ -29,18 +25,15 @@ def tampilkan_form():
         
         # Tombol Kirim
         if st.button("Kirim Rating", use_container_width=True, type="primary"):
-            # Memastikan semua bintang sudah diklik (st.feedback bernilai None jika belum diisi)
             if pelayanan is None or kebersihan is None or pembelajaran is None:
                 st.warning("⚠️ Mohon isi semua kategori bintang sebelum mengirim.")
             else:
-                # Blok try-except ini digunakan agar Anda bisa mencoba tampilan (UI)
-                # meskipun Kunci Rahasia Google Sheets belum kita atur
                 try:
+                    # Menghubungkan ke Google Sheets dengan Secrets
                     conn = st.connection("gsheets", type=GSheetsConnection)
                     df_lama = conn.read()
                     
-                    # st.feedback menghitung bintang dari 0 (bintang 1) hingga 4 (bintang 5)
-                    # Sehingga kita harus menambahkan + 1 agar datanya benar di Google Sheets
+                    # Membuat baris data baru (+1 karena Streamlit menghitung bintang dari 0)
                     data_baru = pd.DataFrame([{
                         "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
                         "Pelayanan": pelayanan + 1,
@@ -48,35 +41,32 @@ def tampilkan_form():
                         "Pembelajaran": pembelajaran + 1
                     }])
                     
+                    # Menyimpan ke Google Sheets
                     df_update = pd.concat([df_lama, data_baru], ignore_index=True)
                     conn.update(data=df_update)
-                except:
-                    pass # Abaikan error koneksi Google untuk sementara
+                    
+                    # Jika berhasil, panggil layar penutup
+                    tampilkan_layar_penutup()
                 
-                # Memanggil layar terima kasih
-                tampilkan_layar_penutup()
+                except Exception as e:
+                    # Jika gagal (kunci salah/internet putus), tampilkan peringatan
+                    st.error(f"⚠️ Gagal menyimpan data. Pastikan konfigurasi rahasia benar. Detail: {e}")
 
-# Fungsi untuk menampilkan layar transisi "Terima Kasih"
 def tampilkan_layar_penutup():
-    # 2. Hapus seluruh form pertanyaan dari layar
     layar_utama.empty() 
     
-    # Ganti dengan teks raksasa di tengah layar
     with layar_utama.container():
         st.markdown("<br><br><br>", unsafe_allow_html=True)
         st.markdown("<h1 style='text-align: center; font-size: 70px;'>⭐ TERIMA KASIH! ⭐</h1>", unsafe_allow_html=True)
         st.markdown("<h2 style='text-align: center; color: gray;'>Penilaian Anda sangat berarti bagi kami.</h2>", unsafe_allow_html=True)
     
-    # Tahan layar ucapan terima kasih selama 5 detik
     time.sleep(5)
     
-    # 3. Hapus ingatan memori bintang peserta sebelumnya
+    # Menghapus jejak bintang peserta sebelumnya
     for key in ['bintang_pelayanan', 'bintang_kebersihan', 'bintang_pembelajaran']:
         if key in st.session_state:
             del st.session_state[key]
             
-    # Muat ulang (reload) halaman secara otomatis ke awal
     st.rerun()
 
-# Menjalankan aplikasi
 tampilkan_form()
