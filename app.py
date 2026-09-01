@@ -6,10 +6,10 @@ import time
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
-# INJEKSI CSS KUSTOM (Versi Padat untuk Layar Laptop)
+# INJEKSI CSS KUSTOM (Update Font & Jarak)
 st.markdown("""
     <style>
-    /* 1. Memotong ruang kosong bawaan Streamlit di bagian paling atas */
+    /* Memotong ruang kosong bawaan Streamlit di bagian paling atas */
     .block-container {
         padding-top: 2rem !important;
         padding-bottom: 1rem !important;
@@ -20,15 +20,21 @@ st.markdown("""
         background-color: #f6f8f9;
     }
     
-    /* Membesarkan ukuran Bintang 3x Lipat */
+    /* 1. Membesarkan ukuran Bintang & Menambah Jarak ke Teks */
     div[data-testid="stFeedback"] {
         transform: scale(3.0); 
         transform-origin: left center;
+        margin-left: 50px; /* Menambah jarak horizontal 2x lipat dari teks ke bintang */
+    }
+
+    /* 2. Menyediakan jarak vertikal antar baris agar tidak terlalu mepet ke bawah */
+    div[data-testid="stVerticalBlock"] > div > div {
+        margin-bottom: 15px;
     }
 
     /* Styling Teks Pertanyaan */
     .tanya-teks {
-        font-size: 38px; /* Disesuaikan agar muat 1 baris di laptop */
+        font-size: 38px; 
         font-weight: 900;
         color: #128c8c; 
         margin-bottom: 0px;
@@ -37,34 +43,36 @@ st.markdown("""
         font-family: 'Arial Black', Impact, sans-serif;
     }
 
-    /* Styling Tombol Submit - Dibuat lebih padat */
+    /* 3. Styling Tombol Submit - Disamakan dengan Header */
     div[data-testid="stButton"] button {
         background-color: #15a5a5 !important; 
         color: white !important;
         font-weight: 900 !important;
         border-radius: 40px !important;
-        padding: 15px 30px !important; /* Tinggi tombol diperkecil */
+        padding: 10px 30px !important; /* Padding disesuaikan agar tombol tidak terlalu gemuk */
         border: none !important;
         box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-        margin-top: 15px !important; /* Jarak atas tombol dinaikkan */
+        margin-top: 10px !important; 
     }
     div[data-testid="stButton"] button p {
-        font-size: 32px !important; 
+        font-size: 42px !important; /* Ukuran disamakan dengan Header */
+        font-family: 'Arial Black', Impact, sans-serif !important; /* Jenis Font disamakan */
     }
 
-    /* Header Mockup - Dibuat lebih tipis */
+    /* 4. Header Mockup - Disamakan dengan Submit */
     .header-mockup {
         background-color: #15a5a5;
-        padding: 15px; /* Padding dikurangi */
+        padding: 15px; 
         text-align: center;
         border-radius: 10px;
-        margin-bottom: 30px; /* Jarak bawah header dikurangi */
+        margin-bottom: 30px; 
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .header-mockup h1 {
         color: white;
-        font-size: 42px; /* Ukuran teks header disesuaikan */
+        font-size: 42px; /* Ukuran disamakan dengan Submit */
         font-weight: 900;
+        font-family: 'Arial Black', Impact, sans-serif; /* Jenis Font disamakan */
         margin: 0;
         line-height: 1.1;
     }
