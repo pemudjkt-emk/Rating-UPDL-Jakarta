@@ -6,14 +6,12 @@ import time
 # 1. Pengaturan Tampilan Layar Dasar
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="🌟", layout="centered")
 
-# 2. INJEKSI CSS KUSTOM (Untuk Mempercantik Tampilan)
+# 2. INJEKSI CSS KUSTOM
 st.markdown("""
     <style>
-    /* Mengubah warna latar belakang aplikasi menjadi abu-abu sangat muda */
     .stApp {
         background-color: #f4f7f6;
     }
-    /* Desain Banner/Header Utama */
     .header-box {
         background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
         padding: 30px;
@@ -24,7 +22,6 @@ st.markdown("""
         margin-bottom: 40px;
         margin-top: 20px;
     }
-    /* Desain Teks Pertanyaan */
     .kategori-teks {
         font-size: 22px;
         font-weight: 600;
@@ -35,12 +32,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Membuat "kanvas" kosong untuk transisi layar
 layar_utama = st.empty()
 
 def tampilkan_form():
     with layar_utama.container():
-        # Menampilkan Banner Header
         st.markdown("""
             <div class='header-box'>
                 <h1 style='color: white; margin-bottom: 5px; font-size: 36px;'>🏢 Penilaian Ruang Kelas</h1>
@@ -48,14 +43,12 @@ def tampilkan_form():
             </div>
         """, unsafe_allow_html=True)
         
-        # Menggunakan kolom agar form berada di tengah layar
-        # Angka [1, 4, 1] berarti sisi kiri-kanan lebih kecil, tengah lebih besar
         col1, col2, col3 = st.columns([1, 4, 1])
         
         with col2:
             st.markdown("<p class='kategori-teks'>👨‍💼 Bagaimana Pelayanan kami?</p>", unsafe_allow_html=True)
             pelayanan = st.feedback("stars", key="bintang_pelayanan")
-            st.write("") # Spasi kosong
+            st.write("") 
             
             st.markdown("<p class='kategori-teks'>🧹 Bagaimana Kebersihan ruangan?</p>", unsafe_allow_html=True)
             kebersihan = st.feedback("stars", key="bintang_kebersihan")
@@ -66,14 +59,16 @@ def tampilkan_form():
             
             st.write("---")
             
-            # Tombol Kirim yang lebih menarik
             if st.button("Kirim Penilaian 🚀", use_container_width=True, type="primary"):
                 if pelayanan is None or kebersihan is None or pembelajaran is None:
                     st.warning("⚠️ Mohon lengkapi semua bintang sebelum mengirim.")
                 else:
                     try:
                         conn = st.connection("gsheets", type=GSheetsConnection)
-                        df_lama = conn.read()
+                        
+                        # PERBAIKAN ADA DI SINI: Menambahkan ttl=0
+                        # Agar Streamlit membaca data paling baru langsung dari Sheets, bukan dari Cache
+                        df_lama = conn.read(ttl=0)
                         
                         data_baru = pd.DataFrame([{
                             "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
@@ -94,7 +89,6 @@ def tampilkan_layar_penutup():
     layar_utama.empty() 
     
     with layar_utama.container():
-        # Memberikan spasi kosong ke bawah agar teks berada di tengah layar
         st.markdown("<br><br><br><br>", unsafe_allow_html=True)
         st.markdown("<h1 style='text-align: center; font-size: 80px;'>✨ TERIMA KASIH! ✨</h1>", unsafe_allow_html=True)
         st.markdown("<h3 style='text-align: center; color: #4364F7;'>Penilaian Anda membantu kami meningkatkan kualitas UPDL Jakarta.</h3>", unsafe_allow_html=True)
@@ -107,5 +101,4 @@ def tampilkan_layar_penutup():
             
     st.rerun()
 
-# Memulai aplikasi
 tampilkan_form()
