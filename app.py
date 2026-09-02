@@ -8,6 +8,10 @@ import os
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
+# --- PERBAIKAN: Membuat "Nomor Antrean" (Sesi ID) ---
+if 'sesi_id' not in st.session_state:
+    st.session_state.sesi_id = 0
+
 # Fungsi untuk membaca file gambar menjadi kode yang bisa dibaca HTML
 def get_image_base64(file_path):
     if os.path.exists(file_path):
@@ -38,9 +42,8 @@ div[data-testid="stVerticalBlock"] > div > div {
     margin-bottom: 45px; 
 }
 
-/* --- PERBAIKAN UKURAN TEKS DENGAN !important --- */
 .tanya-teks {
-    font-size: 30px !important; /* Silakan ubah angka ini jika ingin lebih besar lagi */
+    font-size: 57px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
@@ -94,12 +97,12 @@ div[data-testid="stButton"] button p {
     line-height: 1.1;
 }
 
-/* --- ANIMASI LINGKARAN LOADING (BARU) --- */
+/* --- ANIMASI LINGKARAN LOADING --- */
 .animasi-loading {
-    border: 16px solid #f3f3f3; /* Warna abu muda */
+    border: 16px solid #f3f3f3; 
     border-radius: 50%;
-    border-top: 16px solid #15a5a5; /* Warna tosca */
-    border-bottom: 16px solid #004581; /* Warna biru tua */
+    border-top: 16px solid #15a5a5; 
+    border-bottom: 16px solid #004581; 
     width: 120px;
     height: 120px;
     animation: putar 1.5s linear infinite;
@@ -114,19 +117,16 @@ div[data-testid="stButton"] button p {
 
 layar_utama = st.empty()
 
-# --- FUNGSI BARU: MENAMPILKAN LOADING LALU MENYIMPAN DATA ---
+# --- FUNGSI MENYIMPAN DATA ---
 def proses_simpan_data(pelayanan, kebersihan, keramahan):
-    # 1. Kosongkan tampilan form rating
     layar_utama.empty()
     
-    # 2. Tampilkan layar Loading Animasi
     with layar_utama.container():
         st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
         st.markdown("<div class='animasi-loading'></div>", unsafe_allow_html=True)
         st.markdown("<h1 style='text-align: center; font-size: 50px; color: #004581; margin-top: 30px;'>⏳ Sedang Menyimpan Data...</h1>", unsafe_allow_html=True)
         st.markdown("<h3 style='text-align: center; color: #666;'>Mohon tunggu sebentar</h3>", unsafe_allow_html=True)
         
-    # 3. Lakukan proses komunikasi ke Google Sheets (Secara background)
     try:
         conn = st.connection("gsheets", type=GSheetsConnection)
         df_lama = conn.read(ttl=0)
@@ -141,11 +141,9 @@ def proses_simpan_data(pelayanan, kebersihan, keramahan):
         df_update = pd.concat([df_lama, data_baru], ignore_index=True)
         conn.update(data=df_update)
         
-        # 4. Jika Google Sheets sudah selesai menyimpan, pindah ke layar Terima Kasih
         tampilkan_layar_penutup()
         
     except Exception as e:
-        # Jika gagal (misal internet putus)
         layar_utama.empty()
         with layar_utama.container():
             st.error(f"⚠️ Gagal menyimpan data. Pastikan koneksi internet stabil. Detail: {e}")
@@ -165,23 +163,24 @@ def tampilkan_form():
 </div>
         """, unsafe_allow_html=True)
         
+        # --- PERBAIKAN: Menambahkan Sesi ID pada "key" setiap bintang ---
         col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN KAMI?</p>", unsafe_allow_html=True)
         with col1_kanan:
-            pelayanan = st.feedback("stars", key="bintang_pelayanan")
+            pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
         
         col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col2_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN KAMI?</p>", unsafe_allow_html=True)
         with col2_kanan:
-            kebersihan = st.feedback("stars", key="bintang_kebersihan")
+            kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
         
         col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col3_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN ADMIN/FO KAMI?</p>", unsafe_allow_html=True)
         with col3_kanan:
-            keramahan = st.feedback("stars", key="bintang_keramahan")
+            keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
             
         st.write("---")
         
@@ -191,7 +190,6 @@ def tampilkan_form():
                 if pelayanan is None or kebersihan is None or keramahan is None:
                     st.warning("⚠️ Mohon lengkapi semua bintang sebelum mengirim.")
                 else:
-                    # Panggil fungsi loading yang baru kita buat
                     proses_simpan_data(pelayanan, kebersihan, keramahan)
 
 def tampilkan_layar_penutup():
@@ -204,9 +202,8 @@ def tampilkan_layar_penutup():
     
     time.sleep(5)
     
-    for key in ['bintang_pelayanan', 'bintang_kebersihan', 'bintang_keramahan']:
-        if key in st.session_state:
-            del st.session_state[key]
+    # --- PERBAIKAN: Tambah Nomor Antrean agar bintang kembali bersih di peserta selanjutnya ---
+    st.session_state.sesi_id += 1
             
     st.rerun()
 
