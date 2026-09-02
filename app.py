@@ -17,7 +17,7 @@ def get_image_base64(file_path):
 
 # Memanggil gambar logo
 img_danantara = get_image_base64("logo_danantara.png")
-img_pln = get_image_base64("logo_pln.png")
+img_pln = get_image_base64("Logo_PLN.svg.png")
 
 # INJEKSI CSS KUSTOM
 st.markdown("""
