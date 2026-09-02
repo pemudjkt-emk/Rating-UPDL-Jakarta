@@ -2,37 +2,41 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 import time
+import base64
+import os
 
 # Pengaturan Tampilan Layar (Wide Mode)
-st.set_page_config(page_title="Please Rate Us", page_icon="⚡", layout="wide")
+st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
-# INJEKSI CSS KUSTOM (Update Font & Jarak)
+# Fungsi untuk membaca file gambar menjadi kode yang bisa dibaca HTML
+def get_image_base64(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return "" # Kembalikan kosong jika file gambar belum diupload
+
+# Memanggil gambar logo
+img_danantara = get_image_base64("logo_danantara.png")
+img_pln = get_image_base64("logo_pln.png")
+
+# INJEKSI CSS KUSTOM
 st.markdown("""
     <style>
-    /* Memotong ruang kosong bawaan Streamlit di bagian paling atas */
     .block-container {
         padding-top: 2rem !important;
         padding-bottom: 1rem !important;
     }
-    
-    /* Background utama */
     .stApp {
         background-color: #f6f8f9;
     }
-    
-    /* 1. Membesarkan ukuran Bintang & Menambah Jarak ke Teks */
     div[data-testid="stFeedback"] {
         transform: scale(3.0); 
         transform-origin: left center;
-        margin-left: 50px; /* Menambah jarak horizontal 2x lipat dari teks ke bintang */
+        margin-left: 50px; 
     }
-
-    /* 2. Menyediakan jarak vertikal antar baris agar tidak terlalu mepet ke bawah */
     div[data-testid="stVerticalBlock"] > div > div {
         margin-bottom: 15px;
     }
-
-    /* Styling Teks Pertanyaan */
     .tanya-teks {
         font-size: 38px; 
         font-weight: 900;
@@ -42,37 +46,47 @@ st.markdown("""
         text-transform: uppercase;
         font-family: 'Arial Black', Impact, sans-serif;
     }
-
-    /* 3. Styling Tombol Submit - Disamakan dengan Header */
     div[data-testid="stButton"] button {
         background-color: #15a5a5 !important; 
         color: white !important;
         font-weight: 900 !important;
         border-radius: 40px !important;
-        padding: 10px 30px !important; /* Padding disesuaikan agar tombol tidak terlalu gemuk */
+        padding: 10px 30px !important; 
         border: none !important;
         box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         margin-top: 10px !important; 
     }
     div[data-testid="stButton"] button p {
-        font-size: 42px !important; /* Ukuran disamakan dengan Header */
-        font-family: 'Arial Black', Impact, sans-serif !important; /* Jenis Font disamakan */
+        font-size: 42px !important; 
+        font-family: 'Arial Black', Impact, sans-serif !important; 
     }
-
-    /* 4. Header Mockup - Disamakan dengan Submit */
+    
+    /* -----------------------------------------------------
+       PERUBAHAN DESAIN HEADER: FLEXBOX UNTUK POSISI LOGO 
+       ----------------------------------------------------- */
     .header-mockup {
         background-color: #15a5a5;
-        padding: 15px; 
-        text-align: center;
+        padding: 15px 30px; /* Padding kiri-kanan sedikit dilebarkan */
         border-radius: 10px;
         margin-bottom: 30px; 
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: flex; /* Mengaktifkan mode sejajar */
+        justify-content: space-between; /* Mendorong elemen ke ujung kiri dan kanan */
+        align-items: center; /* Memastikan semuanya berada di tengah secara vertikal */
     }
-    .header-mockup h1 {
+    .header-mockup img {
+        height: 70px; /* Tinggi maksimal logo, otomatis menyesuaikan lebarnya */
+        object-fit: contain;
+    }
+    .header-text {
+        text-align: center;
+        flex-grow: 1; /* Membuat teks mengambil ruang sisa di tengah */
+    }
+    .header-text h1 {
         color: white;
-        font-size: 42px; /* Ukuran disamakan dengan Submit */
+        font-size: 42px; 
         font-weight: 900;
-        font-family: 'Arial Black', Impact, sans-serif; /* Jenis Font disamakan */
+        font-family: 'Arial Black', Impact, sans-serif; 
         margin: 0;
         line-height: 1.1;
     }
@@ -84,9 +98,19 @@ layar_utama = st.empty()
 def tampilkan_form():
     with layar_utama.container():
         
-        st.markdown("""
+        # MEMASUKKAN GAMBAR KE DALAM HTML HEADER
+        st.markdown(f"""
             <div class='header-mockup'>
-                <h1>PLEASE RATE US<br>UPDL JAKARTA</h1>
+                <!-- Logo Kiri -->
+                <img src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
+                
+                <!-- Teks Tengah -->
+                <div class="header-text">
+                    <h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
+                </div>
+                
+                <!-- Logo Kanan -->
+                <img src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
             </div>
         """, unsafe_allow_html=True)
         
