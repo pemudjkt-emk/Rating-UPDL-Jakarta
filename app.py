@@ -40,7 +40,7 @@ div[data-testid="stVerticalBlock"] > div > div {
 
 /* --- PERBAIKAN UKURAN TEKS DENGAN !important --- */
 .tanya-teks {
-    font-size: 57px !important; /* Silakan ubah angka ini jika ingin lebih besar lagi */
+    font-size: 30px !important; /* Silakan ubah angka ini jika ingin lebih besar lagi */
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
