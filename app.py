@@ -42,15 +42,15 @@ div[data-testid="stVerticalBlock"] > div > div {
     margin-bottom: 45px; 
 }
 
-/* --- PERUBAHAN UKURAN & WARNA TEKS (1.5x LEBIH BESAR & LEBIH TERANG) --- */
+/* --- PERUBAHAN UKURAN & WARNA TEKS (SUPER BESAR) --- */
 .tanya-teks {
-    font-size: 120px; /* Sebelumnya 38px, kini menjadi 57px */
-    font-weight: 950;
-    color: #1a6bb8; /* Warna biru senada header namun jauh lebih terang */
-    margin-bottom: 0px;
-    line-height: 1.1;
-    text-transform: uppercase;
-    font-family: 'Arial Black', Impact, sans-serif;
+    font-size: 120px !important; 
+    font-weight: 900 !important; /* Batas maksimal ketebalan standar adalah 900 */
+    color: #1a6bb8 !important; 
+    margin-bottom: 0px !important;
+    line-height: 1.1 !important;
+    text-transform: uppercase !important;
+    font-family: 'Arial Black', Impact, sans-serif !important;
 }
 
 /* Styling Tombol Submit */
