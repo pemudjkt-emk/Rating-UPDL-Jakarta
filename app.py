@@ -8,7 +8,7 @@ import os
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
-# --- PERBAIKAN: Membuat "Nomor Antrean" (Sesi ID) ---
+# Membuat "Nomor Antrean" (Sesi ID) untuk reset memori bintang
 if 'sesi_id' not in st.session_state:
     st.session_state.sesi_id = 0
 
@@ -118,7 +118,7 @@ div[data-testid="stButton"] button p {
 layar_utama = st.empty()
 
 # --- FUNGSI MENYIMPAN DATA ---
-def proses_simpan_data(pelayanan, kebersihan, keramahan):
+def proses_simpan_data(keramahan, kebersihan, pelayanan):
     layar_utama.empty()
     
     with layar_utama.container():
@@ -131,11 +131,12 @@ def proses_simpan_data(pelayanan, kebersihan, keramahan):
         conn = st.connection("gsheets", type=GSheetsConnection)
         df_lama = conn.read(ttl=0)
         
+        # PERBAIKAN: Susunan data dicocokkan dengan kolom Google Sheets terbaru
         data_baru = pd.DataFrame([{
             "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
-            "Pelayanan": pelayanan + 1,
+            "Keramahan": keramahan + 1,
             "Kebersihan": kebersihan + 1,
-            "Keramahan Admin": keramahan + 1 
+            "Pelayanan": pelayanan + 1 
         }])
         
         df_update = pd.concat([df_lama, data_baru], ignore_index=True)
@@ -163,34 +164,36 @@ def tampilkan_form():
 </div>
         """, unsafe_allow_html=True)
         
-        # --- PERBAIKAN: Menambahkan Sesi ID pada "key" setiap bintang ---
+        # --- URUTAN 1: KERAMAHAN SECURITY/ADMIN/FO ---
         col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN KAMI?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN SECURITY/ADMIN/FO?</p>", unsafe_allow_html=True)
         with col1_kanan:
-            pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
+            keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
         
+        # --- URUTAN 2: KEBERSIHAN RUANGAN ---
         col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col2_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN KAMI?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN?</p>", unsafe_allow_html=True)
         with col2_kanan:
             kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
         
+        # --- URUTAN 3: PELAYANAN SECARA KESELURUHAN ---
         col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col3_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN ADMIN/FO KAMI?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN SECARA KESELURUHAN?</p>", unsafe_allow_html=True)
         with col3_kanan:
-            keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
+            pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
             
         st.write("---")
         
         btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
         with btn_col2:
             if st.button("SUBMIT", use_container_width=True, type="primary"):
-                if pelayanan is None or kebersihan is None or keramahan is None:
+                if keramahan is None or kebersihan is None or pelayanan is None:
                     st.warning("⚠️ Mohon lengkapi semua bintang sebelum mengirim.")
                 else:
-                    proses_simpan_data(pelayanan, kebersihan, keramahan)
+                    proses_simpan_data(keramahan, kebersihan, pelayanan)
 
 def tampilkan_layar_penutup():
     layar_utama.empty() 
@@ -202,7 +205,7 @@ def tampilkan_layar_penutup():
     
     time.sleep(5)
     
-    # --- PERBAIKAN: Tambah Nomor Antrean agar bintang kembali bersih di peserta selanjutnya ---
+    # Tambah Nomor Antrean agar bintang kembali bersih di peserta selanjutnya
     st.session_state.sesi_id += 1
             
     st.rerun()
