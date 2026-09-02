@@ -43,7 +43,7 @@ div[data-testid="stVerticalBlock"] > div > div {
 }
 
 .tanya-teks {
-    font-size: 57px !important; 
+    font-size: 45px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
