@@ -44,8 +44,8 @@ div[data-testid="stVerticalBlock"] > div > div {
 
 /* --- PERUBAHAN UKURAN & WARNA TEKS (1.5x LEBIH BESAR & LEBIH TERANG) --- */
 .tanya-teks {
-    font-size: 120px; /* Sebelumnya 38px, kini menjadi 57px */
-    font-weight: 900;
+    font-size: 1200px; /* Sebelumnya 38px, kini menjadi 57px */
+    font-weight: 950;
     color: #1a6bb8; /* Warna biru senada header namun jauh lebih terang */
     margin-bottom: 0px;
     line-height: 1.1;
