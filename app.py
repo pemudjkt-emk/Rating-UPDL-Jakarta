@@ -29,59 +29,65 @@ st.markdown("""
 .stApp {
     background-color: #f6f8f9;
 }
+
+/* --- PERUBAHAN UKURAN BINTANG (1.5x LEBIH BESAR) --- */
 div[data-testid="stFeedback"] {
-    transform: scale(3.0); 
+    transform: scale(4.5); /* Sebelumnya 3.0, kini menjadi 4.5 */
     transform-origin: left center;
-    margin-left: 50px; 
+    margin-left: 10px; /* Jarak dirapatkan agar lebih dekat ke teks */
 }
+
+/* Menambah jarak antar baris karena bintang sekarang sangat besar */
 div[data-testid="stVerticalBlock"] > div > div {
-    margin-bottom: 15px;
+    margin-bottom: 45px; 
 }
+
+/* --- PERUBAHAN UKURAN & WARNA TEKS (1.5x LEBIH BESAR & LEBIH TERANG) --- */
 .tanya-teks {
-    font-size: 38px; 
+    font-size: 57px; /* Sebelumnya 38px, kini menjadi 57px */
     font-weight: 900;
-    color: #128c8c; 
+    color: #1a6bb8; /* Warna biru senada header namun jauh lebih terang */
     margin-bottom: 0px;
     line-height: 1.1;
     text-transform: uppercase;
     font-family: 'Arial Black', Impact, sans-serif;
 }
 
-/* --- PERUBAHAN WARNA TOMBOL SUBMIT --- */
+/* Styling Tombol Submit */
 div[data-testid="stButton"] button {
-    background-color: #004581 !important; /* Biru Tua PLN */
+    background-color: #004581 !important; 
     color: white !important;
     font-weight: 900 !important;
     border-radius: 40px !important;
     padding: 10px 30px !important; 
     border: none !important;
     box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    margin-top: 10px !important; 
+    margin-top: 20px !important; 
 }
 div[data-testid="stButton"] button p {
     font-size: 42px !important; 
     font-family: 'Arial Black', Impact, sans-serif !important; 
 }
 
-/* --- PERUBAHAN WARNA HEADER --- */
+/* Styling Header */
 .header-mockup {
-    background-color: #004581; /* Biru Tua PLN */
+    background-color: #004581; 
     padding: 15px 30px; 
     border-radius: 10px;
-    margin-bottom: 30px; 
+    margin-bottom: 40px; 
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
 }
 
-/* --- PERUBAHAN UKURAN LOGO --- */
+/* Ukuran Logo */
 .logo-danantara {
-    height: 105px; /* Diperbesar 1.5x lipat dari 70px */
+    height: 105px; 
     object-fit: contain;
 }
 .logo-pln {
-    height: 70px; /* Ukuran tetap */
+    height: 70px; 
     object-fit: contain;
 }
 
@@ -105,7 +111,6 @@ layar_utama = st.empty()
 def tampilkan_form():
     with layar_utama.container():
         
-        # HTML ditarik ke paling kiri
         st.markdown(f"""
 <div class='header-mockup'>
     <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
@@ -116,22 +121,25 @@ def tampilkan_form():
 </div>
         """, unsafe_allow_html=True)
         
+        # --- PERUBAHAN TATA LETAK KOLOM (CENTERING & RAPAT) ---
+        # Kolom pembantu di tepi kiri (1) dan tepi kanan (0.5) untuk mendorong konten ke area tengah
+        
         # --- BARIS PERTANYAAN 1 ---
-        col1_kiri, col1_kanan = st.columns([3, 2], gap="large", vertical_alignment="center")
+        col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN KAMI?</p>", unsafe_allow_html=True)
         with col1_kanan:
             pelayanan = st.feedback("stars", key="bintang_pelayanan")
         
         # --- BARIS PERTANYAAN 2 ---
-        col2_kiri, col2_kanan = st.columns([3, 2], gap="large", vertical_alignment="center")
+        col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col2_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN KAMI?</p>", unsafe_allow_html=True)
         with col2_kanan:
             kebersihan = st.feedback("stars", key="bintang_kebersihan")
         
         # --- BARIS PERTANYAAN 3 ---
-        col3_kiri, col3_kanan = st.columns([3, 2], gap="large", vertical_alignment="center")
+        col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col3_kiri:
             st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN ADMIN/FO KAMI?</p>", unsafe_allow_html=True)
         with col3_kanan:
@@ -139,8 +147,7 @@ def tampilkan_form():
             
         st.write("---")
         
-        # --- PERUBAHAN LEBAR TOMBOL SUBMIT ---
-        # Kolom diubah menjadi [1, 1, 1] agar tombol di tengah menjadi 1,5x lebih kecil (lebih ramping)
+        # --- BAGIAN TOMBOL SUBMIT ---
         btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
         with btn_col2:
             if st.button("SUBMIT", use_container_width=True, type="primary"):
