@@ -158,7 +158,7 @@ def tampilkan_form():
 <div class='header-mockup'>
     <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
     <div class="header-text">
-        <h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
+        <h1>RATE OUR SERVICE<br>UPDL JAKARTA</h1>
     </div>
     <img class="logo-pln" src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
 </div>
