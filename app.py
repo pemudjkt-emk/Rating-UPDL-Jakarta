@@ -19,7 +19,7 @@ def get_image_base64(file_path):
 img_danantara = get_image_base64("logo_danantara.png")
 img_pln = get_image_base64("Logo_PLN.svg.png")
 
-# INJEKSI CSS KUSTOM (Spasi dirapikan agar tidak jadi error code block)
+# INJEKSI CSS KUSTOM
 st.markdown("""
 <style>
 .block-container {
@@ -46,8 +46,10 @@ div[data-testid="stVerticalBlock"] > div > div {
     text-transform: uppercase;
     font-family: 'Arial Black', Impact, sans-serif;
 }
+
+/* --- PERUBAHAN WARNA TOMBOL SUBMIT --- */
 div[data-testid="stButton"] button {
-    background-color: #15a5a5 !important; 
+    background-color: #004581 !important; /* Biru Tua PLN */
     color: white !important;
     font-weight: 900 !important;
     border-radius: 40px !important;
@@ -60,8 +62,10 @@ div[data-testid="stButton"] button p {
     font-size: 42px !important; 
     font-family: 'Arial Black', Impact, sans-serif !important; 
 }
+
+/* --- PERUBAHAN WARNA HEADER --- */
 .header-mockup {
-    background-color: #15a5a5;
+    background-color: #004581; /* Biru Tua PLN */
     padding: 15px 30px; 
     border-radius: 10px;
     margin-bottom: 30px; 
@@ -70,10 +74,17 @@ div[data-testid="stButton"] button p {
     justify-content: space-between; 
     align-items: center; 
 }
-.header-mockup img {
-    height: 70px; 
+
+/* --- PERUBAHAN UKURAN LOGO --- */
+.logo-danantara {
+    height: 105px; /* Diperbesar 1.5x lipat dari 70px */
     object-fit: contain;
 }
+.logo-pln {
+    height: 70px; /* Ukuran tetap */
+    object-fit: contain;
+}
+
 .header-text {
     text-align: center;
     flex-grow: 1; 
@@ -94,14 +105,14 @@ layar_utama = st.empty()
 def tampilkan_form():
     with layar_utama.container():
         
-        # PERBAIKAN DI SINI: HTML ditarik ke paling kiri agar tidak dianggap kodingan mentah
+        # HTML ditarik ke paling kiri
         st.markdown(f"""
 <div class='header-mockup'>
-    <img src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
+    <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
     <div class="header-text">
         <h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
     </div>
-    <img src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
+    <img class="logo-pln" src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
 </div>
         """, unsafe_allow_html=True)
         
@@ -128,8 +139,9 @@ def tampilkan_form():
             
         st.write("---")
         
-        # --- BAGIAN TOMBOL SUBMIT ---
-        btn_col1, btn_col2, btn_col3 = st.columns([1, 2, 1])
+        # --- PERUBAHAN LEBAR TOMBOL SUBMIT ---
+        # Kolom diubah menjadi [1, 1, 1] agar tombol di tengah menjadi 1,5x lebih kecil (lebih ramping)
+        btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
         with btn_col2:
             if st.button("SUBMIT", use_container_width=True, type="primary"):
                 if pelayanan is None or kebersihan is None or keramahan is None:
@@ -159,7 +171,7 @@ def tampilkan_layar_penutup():
     
     with layar_utama.container():
         st.markdown("<br><br><br><br>", unsafe_allow_html=True)
-        st.markdown("<h1 style='text-align: center; font-size: 80px; color: #128c8c;'>✨ TERIMA KASIH! ✨</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; font-size: 80px; color: #004581;'>✨ TERIMA KASIH! ✨</h1>", unsafe_allow_html=True)
         st.markdown("<h2 style='text-align: center; color: #666;'>Penilaian Anda sangat berarti bagi kami.</h2>", unsafe_allow_html=True)
     
     time.sleep(5)
