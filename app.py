@@ -44,7 +44,7 @@ div[data-testid="stVerticalBlock"] > div > div {
 
 /* --- PERUBAHAN UKURAN & WARNA TEKS (SUPER BESAR) --- */
 .tanya-teks {
-    font-size: 60px !important; 
+    font-size: 40px !important; 
     font-weight: 900 !important; /* Batas maksimal ketebalan standar adalah 900 */
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
