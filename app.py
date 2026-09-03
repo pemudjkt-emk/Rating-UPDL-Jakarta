@@ -8,15 +8,18 @@ import os
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
+# Membuat "Nomor Antrean" (Sesi ID) untuk reset memori bintang
 if 'sesi_id' not in st.session_state:
     st.session_state.sesi_id = 0
 
+# Fungsi untuk membaca file gambar menjadi kode yang bisa dibaca HTML
 def get_image_base64(file_path):
     if os.path.exists(file_path):
         with open(file_path, "rb") as img_file:
             return base64.b64encode(img_file.read()).decode()
     return "" 
 
+# Memanggil gambar logo
 img_danantara = get_image_base64("logo_danantara.png")
 img_pln = get_image_base64("Logo_PLN.svg.png")
 
@@ -27,23 +30,9 @@ st.markdown("""
     padding-top: 2rem !important;
     padding-bottom: 1rem !important;
 }
-
-/* 1. BACKGROUND UTAMA BERGRADASI AGAR EFEK KACA TERLIHAT */
 .stApp {
-    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%) !important;
+    background-color: #f6f8f9;
 }
-
-/* 2. EFEK KACA TRANSPARAN (GLASSMORPHISM) PADA KOTAK RATING */
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(255, 255, 255, 0.4) !important; /* Warna putih transparan */
-    backdrop-filter: blur(12px) !important; /* Efek blur kaca */
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 25px !important; /* Sudut membulat */
-    border: 1px solid rgba(255, 255, 255, 0.8) !important; /* Garis tepi tipis bersinar */
-    padding: 30px !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 69, 129, 0.15) !important; /* Bayangan kotak */
-}
-
 div[data-testid="stFeedback"] {
     transform: scale(4.5); 
     transform-origin: left center;
@@ -52,8 +41,9 @@ div[data-testid="stFeedback"] {
 div[data-testid="stVerticalBlock"] > div > div {
     margin-bottom: 45px; 
 }
+
 .tanya-teks {
-    font-size: 57px !important; 
+    font-size: 45px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
@@ -61,6 +51,7 @@ div[data-testid="stVerticalBlock"] > div > div {
     text-transform: uppercase !important;
     font-family: 'Arial Black', Impact, sans-serif !important;
 }
+
 div[data-testid="stButton"] button {
     background-color: #004581 !important; 
     color: white !important;
@@ -105,6 +96,8 @@ div[data-testid="stButton"] button p {
     margin: 0;
     line-height: 1.1;
 }
+
+/* --- ANIMASI LINGKARAN LOADING --- */
 .animasi-loading {
     border: 16px solid #f3f3f3; 
     border-radius: 50%;
@@ -124,6 +117,7 @@ div[data-testid="stButton"] button p {
 
 layar_utama = st.empty()
 
+# --- FUNGSI MENYIMPAN DATA ---
 def proses_simpan_data(keramahan, kebersihan, pelayanan):
     layar_utama.empty()
     
@@ -137,6 +131,7 @@ def proses_simpan_data(keramahan, kebersihan, pelayanan):
         conn = st.connection("gsheets", type=GSheetsConnection)
         df_lama = conn.read(ttl=0)
         
+        # PERBAIKAN: Susunan data dicocokkan dengan kolom Google Sheets terbaru
         data_baru = pd.DataFrame([{
             "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
             "Keramahan": keramahan + 1,
@@ -163,31 +158,32 @@ def tampilkan_form():
 <div class='header-mockup'>
     <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
     <div class="header-text">
-        <h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
+        <h1>RATE OUR SERVICE<br>UPDL JAKARTA</h1>
     </div>
     <img class="logo-pln" src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
 </div>
         """, unsafe_allow_html=True)
         
-        # --- PERUBAHAN: Memasukkan pertanyaan ke dalam kotak berbingkai (container transparan) ---
-        with st.container(border=True):
-            col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
-            with col1_kiri:
-                st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN SECURITY/ADMIN/FO?</p>", unsafe_allow_html=True)
-            with col1_kanan:
-                keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
-            
-            col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
-            with col2_kiri:
-                st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN?</p>", unsafe_allow_html=True)
-            with col2_kanan:
-                kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
-            
-            col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
-            with col3_kiri:
-                st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN SECARA KESELURUHAN?</p>", unsafe_allow_html=True)
-            with col3_kanan:
-                pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
+        # --- URUTAN 1: KERAMAHAN SECURITY/ADMIN/FO ---
+        col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col1_kiri:
+            st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN SECURITY/ADMIN/FO?</p>", unsafe_allow_html=True)
+        with col1_kanan:
+            keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
+        
+        # --- URUTAN 2: KEBERSIHAN RUANGAN ---
+        col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col2_kiri:
+            st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN?</p>", unsafe_allow_html=True)
+        with col2_kanan:
+            kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
+        
+        # --- URUTAN 3: PELAYANAN SECARA KESELURUHAN ---
+        col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col3_kiri:
+            st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN SECARA KESELURUHAN?</p>", unsafe_allow_html=True)
+        with col3_kanan:
+            pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
             
         st.write("---")
         
@@ -208,7 +204,10 @@ def tampilkan_layar_penutup():
         st.markdown("<h2 style='text-align: center; color: #666;'>Penilaian Anda sangat berarti bagi kami.</h2>", unsafe_allow_html=True)
     
     time.sleep(5)
+    
+    # Tambah Nomor Antrean agar bintang kembali bersih di peserta selanjutnya
     st.session_state.sesi_id += 1
+            
     st.rerun()
 
 tampilkan_form()
