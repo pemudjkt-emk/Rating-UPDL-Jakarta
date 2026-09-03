@@ -8,8 +8,13 @@ import os
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
+# --- PERBAIKAN LOGIKA: INISIALISASI TAHAPAN ---
 if 'sesi_id' not in st.session_state:
     st.session_state.sesi_id = 0
+if 'tahap' not in st.session_state:
+    st.session_state.tahap = 'form'
+if 'data_temp' not in st.session_state:
+    st.session_state.data_temp = {}
 
 def get_image_base64(file_path):
     if os.path.exists(file_path):
@@ -28,21 +33,16 @@ st.markdown("""
     padding-top: 2rem !important;
     padding-bottom: 1rem !important;
 }
-
-/* 1. BACKGROUND UTAMA PUTIH BERSIH */
 .stApp {
     background: #ffffff !important;
 }
-
-/* 2. WADAH RATING */
 div[data-testid="stVerticalBlockBorderWrapper"] {
     background: rgba(255, 255, 255, 1) !important; 
     border-radius: 25px !important; 
-    border: 1px solid #e0e0e0 !important; /* Garis tepi abu-abu lembut */
+    border: 1px solid #e0e0e0 !important; 
     padding: 30px !important;
     box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.05) !important; 
 }
-
 div[data-testid="stFeedback"] {
     transform: scale(4.5); 
     transform-origin: left center;
@@ -94,7 +94,7 @@ div[data-testid="stButton"] button p {
     gap: 25px; 
 }
 .logo-updl {
-    height: 100px; 
+    height: 65px; 
     object-fit: contain;
 }
 .logo-pln {
@@ -130,45 +130,13 @@ div[data-testid="stButton"] button p {
 </style>
 """, unsafe_allow_html=True)
 
-layar_utama = st.empty()
 
-def proses_simpan_data(keramahan, kebersihan, pelayanan):
-    layar_utama.empty()
+# ==========================================
+# TAHAP 1: MENAMPILKAN FORM RATING
+# ==========================================
+if st.session_state.tahap == 'form':
     
-    with layar_utama.container():
-        st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
-        st.markdown("<div class='animasi-loading'></div>", unsafe_allow_html=True)
-        st.markdown("<h1 style='text-align: center; font-size: 50px; color: #004581; margin-top: 30px;'>⏳ Sedang Menyimpan Data...</h1>", unsafe_allow_html=True)
-        st.markdown("<h3 style='text-align: center; color: #666;'>Mohon tunggu sebentar</h3>", unsafe_allow_html=True)
-        
-    try:
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        df_lama = conn.read(ttl=0)
-        
-        data_baru = pd.DataFrame([{
-            "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
-            "Keramahan": keramahan + 1,
-            "Kebersihan": kebersihan + 1,
-            "Pelayanan": pelayanan + 1 
-        }])
-        
-        df_update = pd.concat([df_lama, data_baru], ignore_index=True)
-        conn.update(data=df_update)
-        
-        tampilkan_layar_penutup()
-        
-    except Exception as e:
-        layar_utama.empty()
-        with layar_utama.container():
-            st.error(f"⚠️ Gagal menyimpan data. Pastikan koneksi internet stabil. Detail: {e}")
-            time.sleep(4)
-            st.rerun()
-
-def tampilkan_form():
-    with layar_utama.container():
-        
-        # PERBAIKAN: Seluruh tag HTML ditarik ke paling kiri agar tidak menjadi "Code Block"
-        st.markdown(f"""
+    st.markdown(f"""
 <div class='header-mockup'>
 <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
 <div class="header-text">
@@ -179,47 +147,93 @@ def tampilkan_form():
 <img class="logo-pln" src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
 </div>
 </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+    
+    with st.container(border=True):
+        col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col1_kiri:
+            st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN SECURITY/ADMIN/FO?</p>", unsafe_allow_html=True)
+        with col1_kanan:
+            keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
         
-        with st.container(border=True):
-            col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
-            with col1_kiri:
-                st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN SECURITY/ADMIN/FO?</p>", unsafe_allow_html=True)
-            with col1_kanan:
-                keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
-            
-            col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
-            with col2_kiri:
-                st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN?</p>", unsafe_allow_html=True)
-            with col2_kanan:
-                kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
-            
-            col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
-            with col3_kiri:
-                st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN SECARA KESELURUHAN?</p>", unsafe_allow_html=True)
-            with col3_kanan:
-                pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
-            
-        st.write("---")
+        col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col2_kiri:
+            st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN?</p>", unsafe_allow_html=True)
+        with col2_kanan:
+            kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
         
-        btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
-        with btn_col2:
-            if st.button("SUBMIT", use_container_width=True, type="primary"):
-                if keramahan is None or kebersihan is None or pelayanan is None:
-                    st.warning("⚠️ Mohon lengkapi semua bintang sebelum mengirim.")
-                else:
-                    proses_simpan_data(keramahan, kebersihan, pelayanan)
+        col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col3_kiri:
+            st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN SECARA KESELURUHAN?</p>", unsafe_allow_html=True)
+        with col3_kanan:
+            pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
+        
+    st.write("---")
+    
+    btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
+    with btn_col2:
+        if st.button("SUBMIT", use_container_width=True, type="primary"):
+            if keramahan is None or kebersihan is None or pelayanan is None:
+                st.warning("⚠️ Mohon lengkapi semua bintang sebelum mengirim.")
+            else:
+                # Simpan jawaban ke memori sementara lalu pindah ke tahap loading
+                st.session_state.data_temp = {
+                    "keramahan": keramahan,
+                    "kebersihan": kebersihan,
+                    "pelayanan": pelayanan
+                }
+                st.session_state.tahap = 'loading'
+                st.rerun()
 
-def tampilkan_layar_penutup():
-    layar_utama.empty() 
+# ==========================================
+# TAHAP 2: PROSES LOADING DAN SIMPAN DATA
+# ==========================================
+elif st.session_state.tahap == 'loading':
     
-    with layar_utama.container():
-        st.markdown("<br><br><br><br>", unsafe_allow_html=True)
-        st.markdown("<h1 style='text-align: center; font-size: 80px; color: #004581;'>✨ TERIMA KASIH! ✨</h1>", unsafe_allow_html=True)
-        st.markdown("<h2 style='text-align: center; color: #666;'>Penilaian Anda sangat berarti bagi kami.</h2>", unsafe_allow_html=True)
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
+    st.markdown("<div class='animasi-loading'></div>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 50px; color: #004581; margin-top: 30px;'>⏳ Sedang Menyimpan Data...</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; color: #666;'>Mohon tunggu sebentar</h3>", unsafe_allow_html=True)
     
+    try:
+        conn = st.connection("gsheets", type=GSheetsConnection)
+        df_lama = conn.read(ttl=0)
+        
+        data_baru = pd.DataFrame([{
+            "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
+            "Keramahan": st.session_state.data_temp["keramahan"] + 1,
+            "Kebersihan": st.session_state.data_temp["kebersihan"] + 1,
+            "Pelayanan": st.session_state.data_temp["pelayanan"] + 1 
+        }])
+        
+        df_update = pd.concat([df_lama, data_baru], ignore_index=True)
+        conn.update(data=df_update)
+        
+        # Jika berhasil, pindah ke layar Sukses
+        st.session_state.tahap = 'sukses'
+        st.rerun()
+        
+    except Exception as e:
+        st.error(f"⚠️ Gagal menyimpan data. Pastikan koneksi internet stabil. Detail: {e}")
+        time.sleep(4)
+        # Jika gagal, kembali ke form awal
+        st.session_state.tahap = 'form'
+        st.rerun()
+
+
+# ==========================================
+# TAHAP 3: LAYAR TERIMA KASIH & RESET
+# ==========================================
+elif st.session_state.tahap == 'sukses':
+    
+    st.markdown("<br><br><br><br>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 80px; color: #004581;'>✨ TERIMA KASIH! ✨</h1>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #666;'>Penilaian Anda sangat berarti bagi kami.</h2>", unsafe_allow_html=True)
+    
+    # Tahan layar selama 5 detik
     time.sleep(5)
+    
+    # Reset sistem dan persiapkan untuk peserta berikutnya
     st.session_state.sesi_id += 1
+    st.session_state.tahap = 'form'
     st.rerun()
-
-tampilkan_form()
