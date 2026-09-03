@@ -19,7 +19,6 @@ def get_image_base64(file_path):
 
 img_danantara = get_image_base64("logo_danantara.png")
 img_pln = get_image_base64("Logo_PLN.svg.png")
-# --- TAMBAHAN: Memanggil Logo UPDL ---
 img_updl = get_image_base64("logo_updl.png")
 
 # INJEKSI CSS KUSTOM
@@ -30,20 +29,18 @@ st.markdown("""
     padding-bottom: 1rem !important;
 }
 
-/* 1. BACKGROUND UTAMA LEBIH LEMBUT (Soft Pastel) */
+/* 1. BACKGROUND UTAMA PUTIH BERSIH */
 .stApp {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+    background: #ffffff !important;
 }
 
-/* 2. EFEK KACA LEBIH TRANSPARAN DAN HALUS */
+/* 2. WADAH RATING */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(255, 255, 255, 0.15) !important; 
-    backdrop-filter: blur(8px) !important; 
-    -webkit-backdrop-filter: blur(8px) !important;
+    background: rgba(255, 255, 255, 1) !important; 
     border-radius: 25px !important; 
-    border: 1px solid rgba(255, 255, 255, 0.3) !important; 
+    border: 1px solid #e0e0e0 !important; /* Garis tepi abu-abu lembut */
     padding: 30px !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 69, 129, 0.05) !important; 
+    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.05) !important; 
 }
 
 div[data-testid="stFeedback"] {
@@ -91,14 +88,13 @@ div[data-testid="stButton"] button p {
     height: 105px; 
     object-fit: contain;
 }
-/* --- TAMBAHAN: Grup untuk logo sisi kanan & ukuran logo UPDL --- */
 .logo-group-right {
     display: flex;
     align-items: center;
-    gap: 25px; /* Jarak antara logo UPDL dan PLN */
+    gap: 25px; 
 }
 .logo-updl {
-    height: 65px; /* Ukuran bisa disesuaikan jika kurang besar/kecil */
+    height: 65px; 
     object-fit: contain;
 }
 .logo-pln {
@@ -171,19 +167,17 @@ def proses_simpan_data(keramahan, kebersihan, pelayanan):
 def tampilkan_form():
     with layar_utama.container():
         
-        # --- PERBAIKAN: HTML Header dengan pengelompokan logo kanan ---
+        # PERBAIKAN: Seluruh tag HTML ditarik ke paling kiri agar tidak menjadi "Code Block"
         st.markdown(f"""
 <div class='header-mockup'>
-    <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
-    
-    <div class="header-text">
-        <h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
-    </div>
-    
-    <div class="logo-group-right">
-        <img class="logo-updl" src="data:image/png;base64,{img_updl}" alt="Logo UPDL" onerror="this.style.display='none'">
-        <img class="logo-pln" src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
-    </div>
+<img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
+<div class="header-text">
+<h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
+</div>
+<div class="logo-group-right">
+<img class="logo-updl" src="data:image/png;base64,{img_updl}" alt="Logo UPDL" onerror="this.style.display='none'">
+<img class="logo-pln" src="data:image/png;base64,{img_pln}" alt="Logo PLN" onerror="this.style.display='none'">
+</div>
 </div>
         """, unsafe_allow_html=True)
         
