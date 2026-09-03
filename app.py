@@ -94,7 +94,7 @@ div[data-testid="stButton"] button p {
     gap: 25px; 
 }
 .logo-updl {
-    height: 90px; 
+    height: 100px; 
     object-fit: contain;
 }
 .logo-pln {
