@@ -8,7 +8,7 @@ import os
 # Pengaturan Tampilan Layar (Wide Mode)
 st.set_page_config(page_title="Rating UPDL Jakarta", page_icon="⚡", layout="wide")
 
-# --- PERBAIKAN LOGIKA: INISIALISASI TAHAPAN ---
+# --- INISIALISASI TAHAPAN ---
 if 'sesi_id' not in st.session_state:
     st.session_state.sesi_id = 0
 if 'tahap' not in st.session_state:
@@ -40,19 +40,22 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     background: rgba(255, 255, 255, 1) !important; 
     border-radius: 25px !important; 
     border: 1px solid #e0e0e0 !important; 
-    padding: 30px !important;
+    padding: 25px 30px !important;
     box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.05) !important; 
 }
+/* Penyesuaian ukuran bintang agar 5 baris muat di layar */
 div[data-testid="stFeedback"] {
-    transform: scale(6.5); 
+    transform: scale(5.5); 
     transform-origin: left center;
     margin-left: 10px; 
 }
+/* Penyesuaian jarak antar baris pertanyaan */
 div[data-testid="stVerticalBlock"] > div > div {
-    margin-bottom: 45px; 
+    margin-bottom: 25px; 
 }
+/* Penyesuaian ukuran teks agar proporsional untuk 5 pertanyaan */
 .tanya-teks {
-    font-size: 57px !important; 
+    font-size: 45px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
@@ -68,7 +71,7 @@ div[data-testid="stButton"] button {
     padding: 10px 30px !important; 
     border: none !important;
     box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    margin-top: 20px !important; 
+    margin-top: 15px !important; 
 }
 div[data-testid="stButton"] button p {
     font-size: 42px !important; 
@@ -78,7 +81,7 @@ div[data-testid="stButton"] button p {
     background-color: #004581; 
     padding: 15px 30px; 
     border-radius: 10px;
-    margin-bottom: 40px; 
+    margin-bottom: 30px; 
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex; 
     justify-content: space-between; 
@@ -150,22 +153,39 @@ if st.session_state.tahap == 'form':
     """, unsafe_allow_html=True)
     
     with st.container(border=True):
+        # 1. Security
         col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA KERAMAHAN SECURITY/ADMIN/FO?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) SECURITY?</p>", unsafe_allow_html=True)
         with col1_kanan:
-            keramahan = st.feedback("stars", key=f"bintang_keramahan_{st.session_state.sesi_id}")
+            sec = st.feedback("stars", key=f"bintang_sec_{st.session_state.sesi_id}")
         
+        # 2. Admin Kelas
         col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col2_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA KEBERSIHAN RUANGAN?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) ADMIN KELAS?</p>", unsafe_allow_html=True)
         with col2_kanan:
-            kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
+            admin = st.feedback("stars", key=f"bintang_admin_{st.session_state.sesi_id}")
         
+        # 3. Front Office
         col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col3_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA PELAYANAN SECARA KESELURUHAN?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) FRONT OFFICE?</p>", unsafe_allow_html=True)
         with col3_kanan:
+            fo = st.feedback("stars", key=f"bintang_fo_{st.session_state.sesi_id}")
+            
+        # 4. Kebersihan
+        col4_space, col4_kiri, col4_kanan, col4_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col4_kiri:
+            st.markdown("<p class='tanya-teks'>KEBERSIHAN RUANGAN DAN FASILITAS?</p>", unsafe_allow_html=True)
+        with col4_kanan:
+            kebersihan = st.feedback("stars", key=f"bintang_kebersihan_{st.session_state.sesi_id}")
+            
+        # 5. Pelayanan Keseluruhan
+        col5_space, col5_kiri, col5_kanan, col5_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        with col5_kiri:
+            st.markdown("<p class='tanya-teks'>PELAYANAN UPDL KESELURUHAN?</p>", unsafe_allow_html=True)
+        with col5_kanan:
             pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
         
     st.write("---")
@@ -173,12 +193,14 @@ if st.session_state.tahap == 'form':
     btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
     with btn_col2:
         if st.button("SUBMIT", use_container_width=True, type="primary"):
-            if keramahan is None or kebersihan is None or pelayanan is None:
-                st.warning("⚠️ Mohon lengkapi semua bintang sebelum mengirim.")
+            # Validasi 5 variabel
+            if sec is None or admin is None or fo is None or kebersihan is None or pelayanan is None:
+                st.warning("⚠️ Mohon lengkapi ke-5 bintang sebelum mengirim.")
             else:
-                # Simpan jawaban ke memori sementara lalu pindah ke tahap loading
                 st.session_state.data_temp = {
-                    "keramahan": keramahan,
+                    "sec": sec,
+                    "admin": admin,
+                    "fo": fo,
                     "kebersihan": kebersihan,
                     "pelayanan": pelayanan
                 }
@@ -199,24 +221,25 @@ elif st.session_state.tahap == 'loading':
         conn = st.connection("gsheets", type=GSheetsConnection)
         df_lama = conn.read(ttl=0)
         
+        # Susunan persis sesuai Header baru di Google Sheets
         data_baru = pd.DataFrame([{
             "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
-            "Keramahan": st.session_state.data_temp["keramahan"] + 1,
+            "Hospitality Security": st.session_state.data_temp["sec"] + 1,
+            "Hospitality Admin": st.session_state.data_temp["admin"] + 1,
+            "Hospitality FO": st.session_state.data_temp["fo"] + 1,
             "Kebersihan": st.session_state.data_temp["kebersihan"] + 1,
-            "Pelayanan": st.session_state.data_temp["pelayanan"] + 1 
+            "Pelayanan Keseluruhan": st.session_state.data_temp["pelayanan"] + 1
         }])
         
         df_update = pd.concat([df_lama, data_baru], ignore_index=True)
         conn.update(data=df_update)
         
-        # Jika berhasil, pindah ke layar Sukses
         st.session_state.tahap = 'sukses'
         st.rerun()
         
     except Exception as e:
         st.error(f"⚠️ Gagal menyimpan data. Pastikan koneksi internet stabil. Detail: {e}")
         time.sleep(4)
-        # Jika gagal, kembali ke form awal
         st.session_state.tahap = 'form'
         st.rerun()
 
@@ -230,10 +253,8 @@ elif st.session_state.tahap == 'sukses':
     st.markdown("<h1 style='text-align: center; font-size: 80px; color: #004581;'>✨ TERIMA KASIH! ✨</h1>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align: center; color: #666;'>Penilaian Anda sangat berarti bagi kami.</h2>", unsafe_allow_html=True)
     
-    # Tahan layar selama 5 detik
     time.sleep(5)
     
-    # Reset sistem dan persiapkan untuk peserta berikutnya
     st.session_state.sesi_id += 1
     st.session_state.tahap = 'form'
     st.rerun()
