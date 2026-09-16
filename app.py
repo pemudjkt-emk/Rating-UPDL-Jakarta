@@ -58,7 +58,7 @@ div[data-testid="stVerticalBlock"] > div > div {
     font-size: 60px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
-    margin-bottom: 0px !important;
+    margin-bottom: 10px !important;
     line-height: 1.1 !important;
     text-transform: uppercase !important;
     font-family: 'Arial Black', Impact, sans-serif !important;
@@ -72,7 +72,7 @@ div[data-testid="stButton"] button {
     padding: 10px 30px !important; 
     border: none !important;
     box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    margin-top: 12px !important; /* Mengurangi jarak dengan pertanyaan terakhir */
+    margin-top: 30px !important; /* Mengurangi jarak dengan pertanyaan terakhir */
 }
 div[data-testid="stButton"] button p {
     font-size: 42px !important; 
