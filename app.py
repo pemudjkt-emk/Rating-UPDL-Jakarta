@@ -155,7 +155,7 @@ if st.session_state.tahap == 'form':
     
     with st.container(border=True):
         # 1. Security
-        col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
+        col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([0.5, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
             st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) SECURITY?</p>", unsafe_allow_html=True)
         with col1_kanan:
