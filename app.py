@@ -156,21 +156,21 @@ if st.session_state.tahap == 'form':
         # 1. Security
         col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
-            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) SECURITY?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>BAGAIMANA HOSPITALITY (KERAMAHAN) SECURITY?</p>", unsafe_allow_html=True)
         with col1_kanan:
             sec = st.feedback("stars", key=f"bintang_sec_{st.session_state.sesi_id}")
         
         # 2. Admin Kelas
         col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col2_kiri:
-            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) ADMIN KELAS?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'> BAGAIMANA HOSPITALITY (KERAMAHAN) ADMIN KELAS?</p>", unsafe_allow_html=True)
         with col2_kanan:
             admin = st.feedback("stars", key=f"bintang_admin_{st.session_state.sesi_id}")
         
         # 3. Front Office
         col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col3_kiri:
-            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) FRONT OFFICE?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>BAGAIMANA HOSPITALITY (KERAMAHAN) FRONT OFFICE?</p>", unsafe_allow_html=True)
         with col3_kanan:
             fo = st.feedback("stars", key=f"bintang_fo_{st.session_state.sesi_id}")
             
