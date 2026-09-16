@@ -51,7 +51,7 @@ div[data-testid="stFeedback"] {
 }
 /* JARAK ANTAR BARIS DIRAPATKAN AGAR MUAT */
 div[data-testid="stVerticalBlock"] > div > div {
-    margin-bottom: 12px; 
+    margin-bottom: 10px; 
 }
 /* UKURAN TEKS DIPERBESAR */
 .tanya-teks {
@@ -72,7 +72,7 @@ div[data-testid="stButton"] button {
     padding: 10px 30px !important; 
     border: none !important;
     box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    margin-top: 0px !important; /* Mengurangi jarak dengan pertanyaan terakhir */
+    margin-top: 6px !important; /* Mengurangi jarak dengan pertanyaan terakhir */
 }
 div[data-testid="stButton"] button p {
     font-size: 42px !important; 
