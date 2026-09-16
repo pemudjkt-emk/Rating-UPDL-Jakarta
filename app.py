@@ -45,13 +45,13 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 /* UKURAN BINTANG DIPERBESAR */
 div[data-testid="stFeedback"] {
-    transform: scale(7.5); 
+    transform: scale(8.5); 
     transform-origin: left center;
     margin-left: 10px; 
 }
 /* JARAK ANTAR BARIS DIRAPATKAN AGAR MUAT */
 div[data-testid="stVerticalBlock"] > div > div {
-    margin-bottom: 10px; 
+    margin-bottom: 12px; 
 }
 /* UKURAN TEKS DIPERBESAR */
 .tanya-teks {
