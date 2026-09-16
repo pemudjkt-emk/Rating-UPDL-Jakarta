@@ -111,7 +111,7 @@ div[data-testid="stButton"] button p {
 }
 .header-text h1 {
     color: white;
-    font-size: 70px; 
+    font-size: 65px; 
     font-weight: 900;
     font-family: 'Arial Black', Impact, sans-serif; 
     margin: 0;
@@ -144,7 +144,7 @@ if st.session_state.tahap == 'form':
 <div class='header-mockup'>
 <img class="logo-danantara" src="data:image/png;base64,{img_danantara}" alt="Logo Danantara" onerror="this.style.display='none'">
 <div class="header-text">
-<h1>RATING KEPUASAN PESERTA<br>UPDL JAKARTA</h1>
+<h1>PLEASE RATE US<br>UPDL JAKARTA</h1>
 </div>
 <div class="logo-group-right">
 <img class="logo-updl" src="data:image/png;base64,{img_updl}" alt="Logo UPDL" onerror="this.style.display='none'">
