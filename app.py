@@ -31,7 +31,7 @@ st.markdown("""
 <style>
 .block-container {
     padding-top: 2rem !important;
-    padding-bottom: 1rem !important;
+    padding-bottom: 0.5rem !important; /* Ditekan agar bagian bawah lebih lega */
 }
 .stApp {
     background: #ffffff !important;
@@ -43,19 +43,19 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     padding: 25px 30px !important;
     box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.05) !important; 
 }
-/* Penyesuaian ukuran bintang agar 5 baris muat di layar */
+/* UKURAN BINTANG DIPERBESAR */
 div[data-testid="stFeedback"] {
-    transform: scale(5.5); 
+    transform: scale(6.5); 
     transform-origin: left center;
     margin-left: 10px; 
 }
-/* Penyesuaian jarak antar baris pertanyaan */
+/* JARAK ANTAR BARIS DIRAPATKAN AGAR MUAT */
 div[data-testid="stVerticalBlock"] > div > div {
-    margin-bottom: 25px; 
+    margin-bottom: 10px; 
 }
-/* Penyesuaian ukuran teks agar proporsional untuk 5 pertanyaan */
+/* UKURAN TEKS DIPERBESAR */
 .tanya-teks {
-    font-size: 45px !important; 
+    font-size: 52px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
@@ -63,6 +63,7 @@ div[data-testid="stVerticalBlock"] > div > div {
     text-transform: uppercase !important;
     font-family: 'Arial Black', Impact, sans-serif !important;
 }
+/* TOMBOL SUBMIT DITARIK KE ATAS */
 div[data-testid="stButton"] button {
     background-color: #004581 !important; 
     color: white !important;
@@ -71,7 +72,7 @@ div[data-testid="stButton"] button {
     padding: 10px 30px !important; 
     border: none !important;
     box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    margin-top: 15px !important; 
+    margin-top: 0px !important; /* Mengurangi jarak dengan pertanyaan terakhir */
 }
 div[data-testid="stButton"] button p {
     font-size: 42px !important; 
@@ -81,7 +82,7 @@ div[data-testid="stButton"] button p {
     background-color: #004581; 
     padding: 15px 30px; 
     border-radius: 10px;
-    margin-bottom: 30px; 
+    margin-bottom: 25px; /* Jarak bawah header sedikit diperkecil */
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: flex; 
     justify-content: space-between; 
@@ -156,21 +157,21 @@ if st.session_state.tahap == 'form':
         # 1. Security
         col1_space, col1_kiri, col1_kanan, col1_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col1_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA HOSPITALITY (KERAMAHAN) SECURITY?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) SECURITY?</p>", unsafe_allow_html=True)
         with col1_kanan:
             sec = st.feedback("stars", key=f"bintang_sec_{st.session_state.sesi_id}")
         
         # 2. Admin Kelas
         col2_space, col2_kiri, col2_kanan, col2_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col2_kiri:
-            st.markdown("<p class='tanya-teks'> BAGAIMANA HOSPITALITY (KERAMAHAN) ADMIN KELAS?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) ADMIN KELAS?</p>", unsafe_allow_html=True)
         with col2_kanan:
             admin = st.feedback("stars", key=f"bintang_admin_{st.session_state.sesi_id}")
         
         # 3. Front Office
         col3_space, col3_kiri, col3_kanan, col3_space2 = st.columns([1, 4, 4.5, 0.5], vertical_alignment="center")
         with col3_kiri:
-            st.markdown("<p class='tanya-teks'>BAGAIMANA HOSPITALITY (KERAMAHAN) FRONT OFFICE?</p>", unsafe_allow_html=True)
+            st.markdown("<p class='tanya-teks'>HOSPITALITY (KERAMAHAN) FRONT OFFICE?</p>", unsafe_allow_html=True)
         with col3_kanan:
             fo = st.feedback("stars", key=f"bintang_fo_{st.session_state.sesi_id}")
             
@@ -188,12 +189,11 @@ if st.session_state.tahap == 'form':
         with col5_kanan:
             pelayanan = st.feedback("stars", key=f"bintang_pelayanan_{st.session_state.sesi_id}")
         
-    st.write("---")
+    # PERUBAHAN: Menghapus st.write("---") yang memakan banyak ruang vertikal
     
     btn_col1, btn_col2, btn_col3 = st.columns([1, 1, 1])
     with btn_col2:
         if st.button("SUBMIT", use_container_width=True, type="primary"):
-            # Validasi 5 variabel
             if sec is None or admin is None or fo is None or kebersihan is None or pelayanan is None:
                 st.warning("⚠️ Mohon lengkapi ke-5 bintang sebelum mengirim.")
             else:
@@ -221,7 +221,6 @@ elif st.session_state.tahap == 'loading':
         conn = st.connection("gsheets", type=GSheetsConnection)
         df_lama = conn.read(ttl=0)
         
-        # Susunan persis sesuai Header baru di Google Sheets
         data_baru = pd.DataFrame([{
             "Waktu": pd.Timestamp.now(tz='Asia/Jakarta').strftime('%Y-%m-%d %H:%M:%S'),
             "Hospitality Security": st.session_state.data_temp["sec"] + 1,
