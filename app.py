@@ -111,7 +111,7 @@ div[data-testid="stButton"] button p {
 }
 .header-text h1 {
     color: white;
-    font-size: 42px; 
+    font-size: 80px; 
     font-weight: 900;
     font-family: 'Arial Black', Impact, sans-serif; 
     margin: 0;
