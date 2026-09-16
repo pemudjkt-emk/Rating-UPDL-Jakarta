@@ -45,7 +45,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 }
 /* UKURAN BINTANG DIPERBESAR */
 div[data-testid="stFeedback"] {
-    transform: scale(6.5); 
+    transform: scale(7.5); 
     transform-origin: left center;
     margin-left: 10px; 
 }
@@ -55,7 +55,7 @@ div[data-testid="stVerticalBlock"] > div > div {
 }
 /* UKURAN TEKS DIPERBESAR */
 .tanya-teks {
-    font-size: 52px !important; 
+    font-size: 60px !important; 
     font-weight: 900 !important;
     color: #1a6bb8 !important; 
     margin-bottom: 0px !important;
